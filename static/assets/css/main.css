@@ -98,7 +98,7 @@ input, select, textarea {
 	}
 
 	body {
-		background: #312450;
+		background: #1a0933;
 	}
 
 		body.is-preload *, body.is-preload *:before, body.is-preload *:after {
@@ -196,25 +196,23 @@ input, select, textarea {
 			padding-bottom: 0.35em;
 		}
 
-			h1.major:after {
-				background-image: -moz-linear-gradient(to right, #5e42a6, #b74e91);
-				background-image: -webkit-linear-gradient(to right, #5e42a6, #b74e91);
-				background-image: -ms-linear-gradient(to right, #5e42a6, #b74e91);
-				background-image: linear-gradient(to right, #5e42a6, #b74e91);
-				-moz-transition: max-width 0.2s ease;
-				-webkit-transition: max-width 0.2s ease;
-				-ms-transition: max-width 0.2s ease;
-				transition: max-width 0.2s ease;
-				border-radius: 0.2em;
-				bottom: 0;
-				content: '';
-				height: 0.05em;
-				position: absolute;
-				right: 0;
-				width: 100%;
-			}
-
-	h2 {
+		h1.major:after {
+			background-image: -moz-linear-gradient(to right, #3d1a5f, #7a3f8f);
+			background-image: -webkit-linear-gradient(to right, #3d1a5f, #7a3f8f);
+			background-image: -ms-linear-gradient(to right, #3d1a5f, #7a3f8f);
+			background-image: linear-gradient(to right, #3d1a5f, #7a3f8f);
+			-moz-transition: max-width 0.2s ease;
+			-webkit-transition: max-width 0.2s ease;
+			-ms-transition: max-width 0.2s ease;
+			transition: max-width 0.2s ease;
+			border-radius: 0.2em;
+			bottom: 0;
+			content: '';
+			height: 0.05em;
+			position: absolute;
+			right: 0;
+			width: 100%;
+		}	h2 {
 		font-size: 1.75em;
 	}
 
@@ -1909,24 +1907,22 @@ input, select, textarea {
 			font-size: 0.8em;
 		}
 
-		input[type="submit"].primary,
-		input[type="reset"].primary,
-		input[type="button"].primary,
-		button.primary,
-		.button.primary {
-			background-color: #ffffff;
-			color: #312450 !important;
-		}
+	input[type="submit"].primary,
+	input[type="reset"].primary,
+	input[type="button"].primary,
+	button.primary,
+	.button.primary {
+		background-color: #ffffff;
+		color: #1a0933 !important;
+	}
 
-			input[type="submit"].primary:after,
-			input[type="reset"].primary:after,
-			input[type="button"].primary:after,
-			button.primary:after,
-			.button.primary:after {
-				display: none;
-			}
-
-		input[type="submit"].disabled, input[type="submit"]:disabled,
+		input[type="submit"].primary:after,
+		input[type="reset"].primary:after,
+		input[type="button"].primary:after,
+		button.primary:after,
+		.button.primary:after {
+			display: none;
+		}		input[type="submit"].disabled, input[type="submit"]:disabled,
 		input[type="reset"].disabled,
 		input[type="reset"]:disabled,
 		input[type="button"].disabled,
@@ -2354,16 +2350,14 @@ input, select, textarea {
 		text-overflow: ellipsis;
 	}
 
-		select option {
-			color: #ffffff;
-			background: #312450;
-		}
+	select option {
+		color: #ffffff;
+		background: #1a0933;
+	}
 
-		select:focus::-ms-value {
-			background-color: transparent;
-		}
-
-		select::-ms-expand {
+	select:focus::-ms-value {
+		background-color: transparent;
+	}		select::-ms-expand {
 			display: none;
 		}
 
@@ -2441,20 +2435,18 @@ input, select, textarea {
 			}
 
 		input[type="checkbox"]:checked + label:before,
-		input[type="radio"]:checked + label:before {
-			background: #ffffff;
-			border-color: #ffffff;
-			color: #b74e91;
-			content: '\f00c';
-		}
+	input[type="radio"]:checked + label:before {
+		background: #ffffff;
+		border-color: #ffffff;
+		color: #7a3f8f;
+		content: '\f00c';
+	}
 
-		input[type="checkbox"]:focus + label:before,
-		input[type="radio"]:focus + label:before {
-			border-color: #ffffff;
-			box-shadow: 0 0 0 1px #ffffff;
-		}
-
-	input[type="checkbox"] + label:before {
+	input[type="checkbox"]:focus + label:before,
+	input[type="radio"]:focus + label:before {
+		border-color: #ffffff;
+		box-shadow: 0 0 0 1px #ffffff;
+	}	input[type="checkbox"] + label:before {
 		border-radius: 0.25em;
 	}
 
@@ -2523,43 +2515,40 @@ input, select, textarea {
 			width: 2.5em;
 			height: 2.5em;
 			display: block;
-			background: #ffffff;
-			border-radius: 100%;
-			color: #312450;
-			text-align: center;
-			line-height: 2.5em;
-			margin: 0 0 1.3em 0;
-		}
+		background: #ffffff;
+		border-radius: 100%;
+		color: #1a0933;
+		text-align: center;
+		line-height: 2.5em;
+		margin: 0 0 1.3em 0;
+	}
 
-			.icon.major:before {
-				font-size: 1.25em;
+		.icon.major:before {
+			font-size: 1.25em;
+		}
+			.wrapper.style1 .icon.major:before {
+				color: #3d1a5f;
 			}
 
-				.wrapper.style1 .icon.major:before {
-					color: #5e42a6;
-				}
+			.wrapper.style1-alt .icon.major:before {
+				color: #2d1447;
+			}
 
-				.wrapper.style1-alt .icon.major:before {
-					color: #493382;
-				}
+			.wrapper.style2 .icon.major:before {
+				color: #5a2d7a;
+			}
 
-				.wrapper.style2 .icon.major:before {
-					color: #5052b5;
-				}
+			.wrapper.style2-alt .icon.major:before {
+				color: #4a2565;
+			}
 
-				.wrapper.style2-alt .icon.major:before {
-					color: #3e4094;
-				}
+			.wrapper.style3 .icon.major:before {
+				color: #7a3f8f;
+			}
 
-				.wrapper.style3 .icon.major:before {
-					color: #b74e91;
-				}
-
-				.wrapper.style3-alt .icon.major:before {
-					color: #953d75;
-				}
-
-/* Image */
+			.wrapper.style3-alt .icon.major:before {
+				color: #6a3580;
+			}/* Image */
 
 	.image {
 		border-radius: 0.25em;
@@ -3236,35 +3225,33 @@ input, select, textarea {
 
 			}
 
-		.wrapper.alt {
-			background-color: #261c3e;
-		}
+	.wrapper.alt {
+		background-color: #1a0933;
+	}
 
-		.wrapper.style1 {
-			background-color: #5e42a6;
-		}
+	.wrapper.style1 {
+		background-color: #3d1a5f;
+	}
 
-		.wrapper.style1-alt {
-			background-color: #493382;
-		}
+	.wrapper.style1-alt {
+		background-color: #2d1447;
+	}
 
-		.wrapper.style2 {
-			background-color: #5052b5;
-		}
+	.wrapper.style2 {
+		background-color: #5a2d7a;
+	}
 
-		.wrapper.style2-alt {
-			background-color: #3e4094;
-		}
+	.wrapper.style2-alt {
+		background-color: #4a2565;
+	}
 
-		.wrapper.style3 {
-			background-color: #b74e91;
-		}
+	.wrapper.style3 {
+		background-color: #7a3f8f;
+	}
 
-		.wrapper.style3-alt {
-			background-color: #953d75;
-		}
-
-		.wrapper.fullscreen {
+	.wrapper.style3-alt {
+		background-color: #6a3580;
+	}		.wrapper.fullscreen {
 			display: -moz-flex;
 			display: -webkit-flex;
 			display: -ms-flex;
@@ -3525,7 +3512,7 @@ input, select, textarea {
 
 	#sidebar {
 		padding: 2.5em 2.5em 0.5em 2.5em ;
-		background: #312450;
+		background: #1a0933;
 		cursor: default;
 		height: 100vh;
 		left: 0;
