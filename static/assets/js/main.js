@@ -188,3 +188,211 @@
 			});
 
 })(jQuery);
+
+// Custom functionality for chat and image generation
+(function() {
+	
+	// Wait for DOM to be ready
+	document.addEventListener('DOMContentLoaded', function() {
+		
+		// Chat functionality
+		const chatForm = document.getElementById('chat-form');
+		if (chatForm) {
+			chatForm.addEventListener('submit', async function(e) {
+				e.preventDefault();
+				
+				const userInput = document.getElementById('user-input');
+				const message = userInput.value.trim();
+				
+				if (message === '') return;
+				
+				// Add user message to chat
+				addMessage(message, 'user');
+				userInput.value = '';
+				
+				// Show typing indicator
+				showTypingIndicator();
+				
+				try {
+					// Send message to backend
+					const response = await fetch('/chat', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify({ message: message })
+					});
+					
+					const data = await response.json();
+					
+					// Remove typing indicator
+					removeTypingIndicator();
+					
+					// Add AI response to chat
+					addMessage(data.response, 'ai');
+				} catch (error) {
+					removeTypingIndicator();
+					addMessage('Sorry, I encountered an error. Please try again.', 'ai');
+				}
+			});
+		}
+		
+		function addMessage(text, sender) {
+			const chatMessages = document.getElementById('chat-messages');
+			const messageDiv = document.createElement('div');
+			messageDiv.className = 'message ' + sender + '-message';
+			
+			const contentDiv = document.createElement('div');
+			contentDiv.className = 'message-content';
+			
+			if (sender === 'ai') {
+				contentDiv.innerHTML = '<strong>AI Assistant:</strong> ' + text;
+			} else {
+				contentDiv.innerHTML = '<strong>You:</strong> ' + text;
+			}
+			
+			messageDiv.appendChild(contentDiv);
+			chatMessages.appendChild(messageDiv);
+			
+			// Scroll to bottom
+			chatMessages.scrollTop = chatMessages.scrollHeight;
+		}
+		
+		function showTypingIndicator() {
+			const chatMessages = document.getElementById('chat-messages');
+			const typingDiv = document.createElement('div');
+			typingDiv.className = 'message ai-message typing-indicator';
+			typingDiv.id = 'typing-indicator';
+			typingDiv.innerHTML = '<div class="message-content"><strong>AI Assistant:</strong> <span class="typing-dots"><span>.</span><span>.</span><span>.</span></span></div>';
+			chatMessages.appendChild(typingDiv);
+			chatMessages.scrollTop = chatMessages.scrollHeight;
+		}
+		
+		function removeTypingIndicator() {
+			const typingIndicator = document.getElementById('typing-indicator');
+			if (typingIndicator) {
+				typingIndicator.remove();
+			}
+		}
+		
+		// Image generation functionality
+		const generateForm = document.getElementById('generate-form');
+		if (generateForm) {
+			generateForm.addEventListener('submit', async function(e) {
+				e.preventDefault();
+				
+				const diseaseSelect = document.getElementById('disease-select');
+				const numImages = document.getElementById('num-images');
+				const disease = diseaseSelect.value;
+				const count = numImages.value;
+				
+				if (!disease) {
+					alert('Please select a disease');
+					return;
+				}
+				
+				// Show loading
+				document.getElementById('generation-loading').style.display = 'block';
+				document.getElementById('generation-result').style.display = 'none';
+				
+				try {
+					// Send generate request to backend
+					const response = await fetch('/generate', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify({ 
+							disease: disease,
+							count: parseInt(count)
+						})
+					});
+					
+					const data = await response.json();
+					
+					// Hide loading
+					document.getElementById('generation-loading').style.display = 'none';
+					
+					if (data.success) {
+						// Display generated images
+						displayGeneratedImages(data.images);
+					} else {
+						alert('Error generating images: ' + (data.error || 'Unknown error'));
+					}
+				} catch (error) {
+					document.getElementById('generation-loading').style.display = 'none';
+					alert('Error: ' + error.message);
+				}
+			});
+		}
+		
+		// Upload button functionality
+		const uploadBtn = document.getElementById('upload-btn');
+		const imageUpload = document.getElementById('image-upload');
+		
+		if (uploadBtn && imageUpload) {
+			uploadBtn.addEventListener('click', function() {
+				imageUpload.click();
+			});
+			
+			imageUpload.addEventListener('change', function(e) {
+				const file = e.target.files[0];
+				if (file) {
+					const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+					const fileExtension = file.name.split('.').pop().toLowerCase();
+					const allowedExtensions = ['jpg', 'jpeg', 'png', 'pdf'];
+					
+					if (!allowedTypes.includes(file.type) && !allowedExtensions.includes(fileExtension)) {
+						alert('Please select a valid file (PDF, JPG, JPEG, or PNG)');
+						imageUpload.value = '';
+						return;
+					}
+					
+					const reader = new FileReader();
+					reader.onload = function(event) {
+						const previewImage = document.getElementById('preview-image');
+						const uploadPreview = document.getElementById('upload-preview');
+						
+						// Only show preview for image files, not PDF
+						if (file.type.startsWith('image/')) {
+							previewImage.src = event.target.result;
+							uploadPreview.style.display = 'block';
+						} else {
+							uploadPreview.style.display = 'none';
+							alert('PDF uploaded successfully: ' + file.name);
+						}
+					};
+					reader.readAsDataURL(file);
+				}
+			});
+		}
+		
+		function displayGeneratedImages(images) {
+			const container = document.getElementById('generated-images');
+			container.innerHTML = '';
+			
+			images.forEach(function(imagePath, index) {
+				const imgWrapper = document.createElement('div');
+				imgWrapper.className = 'generated-image-item';
+				
+				const img = document.createElement('img');
+				img.src = imagePath;
+				img.alt = 'Generated image ' + (index + 1);
+				
+				const downloadBtn = document.createElement('a');
+				downloadBtn.href = imagePath;
+				downloadBtn.download = 'generated_' + (index + 1) + '.jpg';
+				downloadBtn.className = 'button small';
+				downloadBtn.innerHTML = '<i class="fa fa-download"></i> Download';
+				
+				imgWrapper.appendChild(img);
+				imgWrapper.appendChild(downloadBtn);
+				container.appendChild(imgWrapper);
+			});
+			
+			document.getElementById('generation-result').style.display = 'block';
+		}
+		
+	});
+	
+})();
