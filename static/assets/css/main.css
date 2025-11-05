@@ -3970,11 +3970,17 @@ input, select, textarea {
 }
 
 .user-message .message-content {
-	background: rgba(45, 27, 78, 0.9);
+	background: rgba(45, 27, 78, 0.4);
+	backdrop-filter: blur(20px) saturate(180%);
+	-webkit-backdrop-filter: blur(20px) saturate(180%);
 	color: #ffffff;
-	border-radius: 25px;
-	border: 1px solid rgba(255, 255, 255, 0.1);
-	padding: 0.8em 1.8em 1.2em 1.8em;
+	border-radius: 20px;
+	border: 1.5px solid rgba(255, 255, 255, 0.25);
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37),
+	            inset 0 1px 1px 0 rgba(255, 255, 255, 0.3);
+	padding: 0.35em 0.75em 0.55em 0.75em;
+	max-width: 60%;
+	display: inline-block;
 }
 
 .ai-message {
@@ -3982,11 +3988,15 @@ input, select, textarea {
 }
 
 .ai-message .message-content {
-	background: rgba(61, 37, 86, 0.85);
+	background: rgba(61, 37, 86, 0.4);
+	backdrop-filter: blur(20px) saturate(180%);
+	-webkit-backdrop-filter: blur(20px) saturate(180%);
 	color: #ffffff;
 	border-radius: 25px;
 	border-left: none;
-	border: 1px solid rgba(255, 255, 255, 0.1);
+	border: 1.5px solid rgba(168, 85, 216, 0.4);
+	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37),
+	            inset 0 1px 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .ai-message .message-content strong {
