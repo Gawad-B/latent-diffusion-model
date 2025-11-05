@@ -245,10 +245,68 @@
 			const contentDiv = document.createElement('div');
 			contentDiv.className = 'message-content';
 			
+			// First, handle bold text
+			text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+			
+			// Split by lines and process
+			let lines = text.split('\n');
+			let processedLines = [];
+			let currentParagraph = [];
+			
+			for (let line of lines) {
+				line = line.trim();
+				
+				// Empty line = end of paragraph
+				if (!line) {
+					if (currentParagraph.length > 0) {
+						processedLines.push(currentParagraph.join(' '));
+						currentParagraph = [];
+					}
+					continue;
+				}
+				
+				// Bullet point or header - add as separate item
+				if (line.match(/^[\*•-]\s+/) || line.match(/:$/)) {
+					// Flush current paragraph first
+					if (currentParagraph.length > 0) {
+						processedLines.push(currentParagraph.join(' '));
+						currentParagraph = [];
+					}
+					processedLines.push(line);
+				}
+				// Regular text - add to current paragraph
+				else {
+					currentParagraph.push(line);
+				}
+			}
+			
+			// Flush remaining paragraph
+			if (currentParagraph.length > 0) {
+				processedLines.push(currentParagraph.join(' '));
+			}
+			
+			// Now format the processed lines
+			let html = '';
+			for (let line of processedLines) {
+				// Header (ends with colon)
+				if (line.match(/:$/) && !line.match(/^[\*•-]/)) {
+					html += '<div style="margin-top: 1.2em; margin-bottom: 0.5em;"><strong>' + line + '</strong></div>';
+				}
+				// Bullet point
+				else if (line.match(/^[\*•-]\s+/)) {
+					line = line.replace(/^[\*•-]\s+/, '');
+					html += '<div style="margin-left: 0.5em; margin-top: 0.4em;">• ' + line + '</div>';
+				}
+				// Regular paragraph
+				else {
+					html += '<div style="margin-top: 0.8em;">' + line + '</div>';
+				}
+			}
+			
 			if (sender === 'ai') {
-				contentDiv.innerHTML = '<strong>AI Assistant:</strong> ' + text;
+				contentDiv.innerHTML = '<div style="line-height: 1.8;"><strong style="color: #A855D8;">AI Assistant:</strong>' + html + '</div>';
 			} else {
-				contentDiv.innerHTML = '<strong>You:</strong> ' + text;
+				contentDiv.innerHTML = '<div style="line-height: 1.8;">' + html + '</div>';
 			}
 			
 			messageDiv.appendChild(contentDiv);
