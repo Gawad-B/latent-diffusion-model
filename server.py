@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, send_file
+from flask import Flask, render_template, request, jsonify, send_file, redirect, url_for, session
 import requests
 import json
 import os
@@ -8,11 +8,23 @@ from io import BytesIO
 import zipfile
 import time
 from dotenv import load_dotenv
+from functools import wraps
+from database import db, User
 
 # Load environment variables
 load_dotenv()
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret-key-change-in-production')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Initialize database
+db.init_app(app)
+
+# Create tables
+with app.app_context():
+    db.create_all()
 
 # Model generator (lazy loaded)
 model_generator = None
@@ -141,9 +153,95 @@ def get_fallback_response(user_message):
     else:
         return "I'm here to help with information about rare diseases, medical imaging, and our database. What would you like to know?"
 
+def login_required(f):
+    """Decorator to require login for routes"""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in session:
+            return redirect(url_for('login_page'))
+        return f(*args, **kwargs)
+    return decorated_function
+
 @app.route('/')
+@login_required
 def home():
-    return render_template('index.html')
+    user = User.query.get(session['user_id'])
+    return render_template('index.html', user=user)
+
+@app.route('/login')
+def login_page():
+    if 'user_id' in session:
+        return redirect(url_for('home'))
+    return render_template('login.html')
+
+@app.route('/signup')
+def signup_page():
+    if 'user_id' in session:
+        return redirect(url_for('home'))
+    return render_template('signup.html')
+
+@app.route('/api/signup', methods=['POST'])
+def signup():
+    """Handle user registration"""
+    data = request.get_json()
+    username = data.get('username', '').strip()
+    email = data.get('email', '').strip()
+    password = data.get('password', '')
+    
+    # Validation
+    if not username or not email or not password:
+        return jsonify({'error': 'All fields are required'}), 400
+    
+    if len(password) < 6:
+        return jsonify({'error': 'Password must be at least 6 characters'}), 400
+    
+    # Check if user exists
+    if User.query.filter_by(username=username).first():
+        return jsonify({'error': 'Username already exists'}), 400
+    
+    if User.query.filter_by(email=email).first():
+        return jsonify({'error': 'Email already registered'}), 400
+    
+    # Create new user
+    try:
+        user = User(username=username, email=email)
+        user.set_password(password)
+        db.session.add(user)
+        db.session.commit()
+        
+        return jsonify({'success': True, 'message': 'Account created successfully'}), 201
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error creating user: {e}")
+        return jsonify({'error': 'Failed to create account'}), 500
+
+@app.route('/api/login', methods=['POST'])
+def login():
+    """Handle user login"""
+    data = request.get_json()
+    email = data.get('email', '').strip()
+    password = data.get('password', '')
+    
+    if not email or not password:
+        return jsonify({'error': 'Email and password are required'}), 400
+    
+    # Find user
+    user = User.query.filter_by(email=email).first()
+    
+    if not user or not user.check_password(password):
+        return jsonify({'error': 'Invalid email or password'}), 401
+    
+    # Set session
+    session['user_id'] = user.id
+    session['username'] = user.username
+    
+    return jsonify({'success': True, 'message': 'Login successful', 'username': user.username})
+
+@app.route('/api/logout', methods=['POST'])
+def logout():
+    """Handle user logout"""
+    session.clear()
+    return jsonify({'success': True, 'message': 'Logged out successfully'})
 
 @app.route('/test-api', methods=['GET'])
 def test_api():
@@ -224,15 +322,18 @@ def generate():
     
     data = request.get_json()
     disease = data.get('disease', '')
-    count = data.get('count', 1)
+    count = data.get('num_images', data.get('count', 1))
     
     if not disease:
         return jsonify({'success': False, 'error': 'No disease specified'}), 400
     
     # Validate count
     count = int(count)
-    if count < 1 or count > 10:
-        return jsonify({'success': False, 'error': 'Count must be between 1 and 10'}), 400
+    if count < 1 or count > 20:
+        return jsonify({'success': False, 'error': 'Count must be between 1 and 20'}), 400
+    
+    # Limit display to maximum 6 samples
+    display_count = min(count, 6)
     
     try:
         # Lazy load model generator
@@ -284,9 +385,12 @@ def generate():
             web_path = '/' + str(rel_path).replace('\\', '/')
             web_paths.append(web_path)
         
+        # Limit displayed images to maximum 6 samples
+        display_paths = web_paths[:display_count]
+        
         return jsonify({
             'success': True,
-            'images': web_paths,
+            'images': display_paths,
             'disease': disease,
             'count': count,
             'session_id': session_id
@@ -305,6 +409,39 @@ def download_batch():
     data = request.get_json()
     session_id = data.get('session_id', '')
     
+    if not session_id:
+        return jsonify({'success': False, 'error': 'No session ID provided'}), 400
+    
+    try:
+        session_dir = Path('./static/generated') / session_id
+        
+        if not session_dir.exists():
+            return jsonify({'success': False, 'error': 'Session not found'}), 404
+        
+        # Create zip file in memory
+        memory_file = BytesIO()
+        with zipfile.ZipFile(memory_file, 'w', zipfile.ZIP_DEFLATED) as zf:
+            for img_file in session_dir.glob('*.png'):
+                zf.write(img_file, img_file.name)
+        
+        memory_file.seek(0)
+        
+        return send_file(
+            memory_file,
+            mimetype='application/zip',
+            as_attachment=True,
+            download_name=f'{session_id}_images.zip'
+        )
+    
+    except Exception as e:
+        print(f"Error creating zip: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/download-all/<session_id>', methods=['GET'])
+@login_required
+def download_all(session_id):
+    """Download all generated images as a zip file"""
     if not session_id:
         return jsonify({'success': False, 'error': 'No session ID provided'}), 400
     

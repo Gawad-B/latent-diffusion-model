@@ -2,11 +2,18 @@
 
 A comprehensive web application for managing and generating medical images for rare diseases using AI technology. This platform provides a medical images database and leverages **Latent Diffusion Models** to generate synthetic chest X-ray images for research, diagnosis, and educational purposes.
 
-## 🎉 Integration Complete!
+## 🎉 Features Complete!
 
-Your medical image generation system is fully integrated and ready to use! This README contains all documentation previously split across multiple files.
+Your medical image generation system is fully integrated and ready to use with authentication!
 
 ## ✨ Key Features
+
+### 🔐 User Authentication
+- **Secure Login & Signup** with liquid glass UI design
+- Password hashing with Werkzeug
+- Session-based authentication
+- Protected routes requiring login
+- User database with SQLite
 
 ### 🧬 AI Medical Image Generation
 - **Latent Diffusion Model** trained on chest X-ray datasets
@@ -19,9 +26,10 @@ Your medical image generation system is fully integrated and ready to use! This 
 - **Flexible downloads**: Individual images or bulk ZIP download
 
 ### 💬 AI Chat Assistant
-- Interactive medical information assistant powered by Google Gemini AI
+- Interactive medical information assistant powered by **Google Gemini 2.5 Flash**
 - Get instant answers about rare diseases and medical imaging
 - Context-aware responses with medical expertise
+- Environment variable-based API key management
 
 ### 🗂️ Medical Image Database
 - Curated collection of medical images for rare diseases
@@ -35,11 +43,14 @@ Your medical image generation system is fully integrated and ready to use! This 
 ## 🏗️ Tech Stack
 
 - **Backend**: Python Flask
+- **Database**: SQLite with Flask-SQLAlchemy
+- **Authentication**: Session-based with Werkzeug password hashing
 - **ML Framework**: PyTorch + Diffusers (Hugging Face)
 - **Model**: Latent Diffusion Model (U-Net + VAE)
 - **Frontend**: HTML5, CSS3, JavaScript (jQuery)
 - **AI Chat**: Google Gemini API (gemini-2.5-flash)
-- **Design**: Responsive CSS with Font Awesome icons
+- **Design**: Responsive CSS with glassmorphism effects & Font Awesome icons
+- **Security**: Environment variables with python-dotenv, Git LFS for large files
 
 ## 🚀 Quick Start
 
@@ -55,7 +66,14 @@ pip install -r requirements.txt
 ```
 ⏱️ *Note: First installation may take 5-10 minutes (downloads PyTorch, etc.)*
 
-### 3. Get the Trained Model
+### 3. Configure Environment Variables
+Create a `.env` file in the project root:
+```bash
+GOOGLE_API_KEY=your_google_api_key_here
+SECRET_KEY=your_secret_key_for_sessions
+```
+
+### 4. Get the Trained Model
 **IMPORTANT:** Download the trained model from your Colab notebook.
 
 See **[MODEL_DOWNLOAD_GUIDE.md](MODEL_DOWNLOAD_GUIDE.md)** for detailed instructions.
@@ -65,33 +83,42 @@ Quick version:
 2. Download `final_unet_model.pth` (or `model_checkpoints.zip`)
 3. Place in `checkpoints/` folder
 
-### 4. Verify Setup
+### 5. Verify Setup
 ```bash
 python verify_setup.py
 ```
 
-### 5. Start the Server
+### 6. Start the Server
 ```bash
 python server.py
 ```
 
-### 6. Open Your Browser
-```
-http://127.0.0.1:5000
-```
+### 7. Create Your Account
+1. Open `http://127.0.0.1:5000/signup`
+2. Fill in username, email, and password
+3. Click the liquid glass "Sign Up" button
+
+### 8. Login and Use
+1. Navigate to `http://127.0.0.1:5000/login`
+2. Enter your credentials
+3. Start generating images and chatting with AI!
 
 ## 📂 Project Structure
 
 ```
 latent-diffusion-model/
-├── server.py                           # Flask backend server
+├── server.py                           # Flask backend server with authentication
+├── database.py                         # User database models
 ├── model_inference.py                  # ML model inference engine
 ├── requirements.txt                    # Python dependencies
 ├── verify_setup.py                     # Setup verification script
+├── .env                                # Environment variables (API keys, secrets)
+├── .gitignore                          # Git ignore file
 ├── README.md                           # Complete documentation (this file)
 ├── Copy of Tuberculosis_&_Pneumonia_.ipynb  # Colab training notebook
 ├── checkpoints/
-│   └── final_unet_model.pth           # Trained model weights (download from Colab)
+│   ├── .gitattributes                 # Git LFS configuration
+│   └── final_unet_model.pth           # Trained model weights (385MB, tracked with Git LFS)
 ├── static/
 │   ├── generated/                     # Generated images (auto-created)
 │   ├── images/                        # Static images (logo, favicon)
@@ -100,12 +127,22 @@ latent-diffusion-model/
 │   │   ├── js/main.js                # Custom JavaScript
 │   │   └── webfonts/                 # Font files
 └── templates/
+    ├── index.html                     # Main application page (protected)
+    ├── login.html                     # Login page with liquid glass button
+    └── signup.html                    # Signup page with liquid glass button
+│   │   └── webfonts/                 # Font files
+└── templates/
     └── index.html                     # Main HTML template
 ```
 └── INTEGRATION_COMPLETE.md            # Integration summary
 ```
 
 ## 🎯 How to Use
+
+### First Time Setup
+1. **Sign Up**: Navigate to `/signup` and create an account
+2. **Login**: Use your credentials at `/login`
+3. **Access Protected Features**: All image generation and chat features require login
 
 ### Generating Medical Images
 
@@ -134,8 +171,32 @@ latent-diffusion-model/
 
 ## 🔌 API Endpoints
 
+### Authentication
+
+#### `GET /login`
+Serves the login page with liquid glass button design.
+
+#### `GET /signup`
+Serves the signup page with liquid glass button design.
+
+#### `POST /api/login`
+User login endpoint.
+- **Request**: `{"email": "user@example.com", "password": "password123"}`
+- **Response**: `{"success": true, "message": "Login successful", "username": "user"}`
+
+#### `POST /api/signup`
+User registration endpoint.
+- **Request**: `{"username": "user", "email": "user@example.com", "password": "password123"}`
+- **Response**: `{"success": true, "message": "Account created successfully"}`
+
+#### `POST /api/logout`
+User logout endpoint.
+- **Response**: `{"success": true, "message": "Logged out successfully"}`
+
+### Application Routes
+
 ### `GET /`
-Serves the main web application.
+Serves the main web application (requires login).
 
 ### `POST /chat`
 AI chat interactions.
@@ -208,9 +269,19 @@ pip install -r requirements.txt
 ```
 ⏱️ **Note:** First installation may take 5-10 minutes as it downloads PyTorch and other ML libraries.
 
-### 3. Get the Trained Model
+### 3. Configure Environment Variables
+Create a `.env` file in the project root:
+```bash
+GOOGLE_API_KEY=your_google_api_key_here
+SECRET_KEY=your_secret_key_for_sessions
+```
+**Note:** The `.env` file is already in `.gitignore` to keep your secrets safe.
+
+### 4. Get the Trained Model
 
 **CRITICAL:** You need to download the trained model checkpoint from your Colab notebook!
+
+**Note:** The model file (385MB) is tracked with **Git LFS** for version control.
 
 #### Quick Guide: Getting Your Model from Colab
 
@@ -308,16 +379,20 @@ Ensure your project has this structure:
 ```
 latent-diffusion-model/
 ├── server.py
+├── database.py
 ├── model_inference.py
 ├── requirements.txt
 ├── verify_setup.py
+├── .env  ← Your environment variables (create this!)
 ├── checkpoints/
 │   └── final_unet_model.pth  ← Your trained model (REQUIRED)
 ├── static/
 │   ├── generated/  ← Generated images saved here (auto-created)
 │   └── assets/
 ├── templates/
-│   └── index.html
+│   ├── index.html
+│   ├── login.html
+│   └── signup.html
 └── Copy of Tuberculosis_&_Pneumonia_.ipynb
 ```
 
@@ -483,27 +558,39 @@ Tests Google Gemini API connectivity.
 
 # 🤖 Model Details & Technical Specifications
 
-## What Was Implemented
+### What Was Implemented
 
-### 1. Model Integration (`model_inference.py`)
+### 1. User Authentication System (`database.py`, `server.py`)
+- SQLite database with Flask-SQLAlchemy
+- User model with secure password hashing
+- Login/signup pages with liquid glass button design
+- Session-based authentication
+- Protected routes with `@login_required` decorator
+- Logout functionality
+
+### 2. Model Integration (`model_inference.py`)
 - Loads the trained Latent Diffusion Model from Colab notebook
 - Uses Stable Diffusion VAE for image encoding/decoding
 - Generates synthetic chest X-ray images
 - Supports batch generation with progress tracking
 
-### 2. Backend API (`server.py`)
+### 3. Backend API (`server.py`)
+- Authentication endpoints: `/api/login`, `/api/signup`, `/api/logout`
 - `/generate` endpoint: Generates images based on disease type and count
 - `/download-batch` endpoint: Downloads all generated images as ZIP
 - Lazy-loads the model (saves memory)
 - Creates unique session folders for each generation batch
+- Environment variable configuration with `.env`
 
-### 3. Frontend Interface (`static/assets/js/main.js`)
+### 4. Frontend Interface (`static/assets/js/main.js`, templates)
+- Login/signup pages with liquid glass glassmorphism button design
 - User selects disease type and image count
 - Shows loading indicator during generation
 - Preview mode displays all generated images in grid
 - Individual download buttons for each image
 - "Download All as ZIP" button for batch download
 - Smooth scrolling to results
+- Logout button in sidebar
 
 ## Architecture
 
@@ -659,8 +746,12 @@ Current training settings:
 
 ---
 
-# ✨ Features Implemented
+## ✨ Features Implemented
 
+✅ **User Authentication**: Secure login/signup with session management  
+✅ **Liquid Glass UI**: Modern glassmorphism design for auth buttons  
+✅ **Password Security**: Werkzeug password hashing  
+✅ **Protected Routes**: All main features require authentication  
 ✅ **Disease Selection**: Choose Normal, Pneumonia, or Tuberculosis  
 ✅ **Batch Generation**: Generate 1-10 images at once  
 ✅ **Progress Indicator**: Visual feedback during generation  
@@ -672,6 +763,8 @@ Current training settings:
 ✅ **Responsive UI**: Works on desktop and mobile  
 ✅ **AI Chat Assistant**: Google Gemini powered medical Q&A  
 ✅ **Lazy Loading**: Model loads only when needed  
+✅ **Environment Variables**: Secure API key management  
+✅ **Git LFS Integration**: Large model file version control
 
 ---
 
@@ -682,10 +775,20 @@ Current training settings:
 - [x] Image generation pipeline
 - [x] Preview before download
 - [x] Batch ZIP download
-- [x] AI Chat Assistant
+- [x] AI Chat Assistant (Google Gemini 2.5 Flash)
 - [x] Responsive web interface
+- [x] User authentication system
+- [x] Login/signup with liquid glass design
+- [x] Session management
+- [x] Protected routes
+- [x] Environment variable configuration
+- [x] Git LFS for large files
 
 ## Planned
+- [ ] Password reset functionality
+- [ ] Email verification
+- [ ] User profile management
+- [ ] Generation history per user
 - [ ] Conditional generation (specify exact features)
 - [ ] Super-resolution upscaling (256→1024)
 - [ ] Multiple disease categories
@@ -754,17 +857,23 @@ cd latent-diffusion-model
 # 2. Install dependencies
 pip install -r requirements.txt
 
-# 3. Download model from Colab (see "Getting the Trained Model" section)
+# 3. Configure environment variables
+# Create .env file with:
+# GOOGLE_API_KEY=your_api_key
+# SECRET_KEY=your_secret_key
+
+# 4. Download model from Colab (see "Getting the Trained Model" section)
 # Place final_unet_model.pth in checkpoints/
 
-# 4. Verify setup
+# 5. Verify setup
 python verify_setup.py
 
-# 5. Start server
+# 6. Start server
 python server.py
 
-# 6. Open browser
-# http://127.0.0.1:5000
+# 7. Create account and login
+# Navigate to http://127.0.0.1:5000/signup
+# Then login at http://127.0.0.1:5000/login
 ```
 
 **Ready to generate medical images!** 🏥🖼️✨
@@ -836,7 +945,7 @@ Contributions are welcome! Please:
   - [Chest X-Ray Pneumonia](https://www.kaggle.com/datasets/paultimothymooney/chest-xray-pneumonia)
   - [Tuberculosis Dataset](https://www.kaggle.com/datasets/tawsifurrahman/tuberculosis-tb-chest-xray-dataset)
 - **AI Chat**: Google Gemini API
-- **Design**: HTML5 UP Template
+- **Design**: Figma
 - **Icons**: Font Awesome
 - Medical research community for inspiration
 

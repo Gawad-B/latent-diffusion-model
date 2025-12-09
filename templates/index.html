@@ -6,9 +6,17 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="icon" type="image/x-icon" href="/static/images/lung.ico" />
 		<link rel="stylesheet" href="/static/assets/css/main.css" />
+		<link rel="stylesheet" href="/static/assets/css/animations.css" />
 		<noscript><link rel="stylesheet" href="/static/assets/css/noscript.css" /></noscript>
 	</head>
 	<body class="is-preload">
+		<!-- Menu Toggle Button -->
+			<button id="menuToggle" class="menu-toggle" aria-label="Toggle Menu">
+				<span></span>
+				<span></span>
+				<span></span>
+			</button>
+
 		<!-- Sidebar -->
 			<section id="sidebar">
 				<div class="inner">
@@ -18,10 +26,14 @@
 							<li><a href="#one">What we do</a></li>
 							<li><a href="#two">Generate Images</a></li>
 							<li><a href="#three">AI Chat</a></li>
+							<li><a href="#" id="logoutBtn">Logout</a></li>
 						</ul>
 					</nav>
 				</div>
 			</section>
+
+		<!-- Particles Background -->
+			<div class="particles-container" id="particles"></div>
 
 		<!-- Wrapper -->
 			<div id="wrapper">
@@ -29,9 +41,9 @@
 				<!-- Intro -->
 					<section id="intro" class="wrapper style1 fullscreen fade-up">
 						<div class="inner">
-							<h1>Rare Diseases Medical Images Databases</h1>
+							<h1 class="text-glow animate-fade-in-up">Rare Diseases Medical Images Databases</h1>
 							<ul class="actions">
-								<li><a href="#two" class="button scrolly">Get Started</a></li>
+								<li><a href="#two" class="button scrolly button-ripple hover-lift animate-pulse-glow">Get Started</a></li>
 							</ul>
 						</div>
 					</section>
@@ -42,33 +54,33 @@
 							<h2>What we do</h2>
 							<p>We provide a comprehensive database of medical images for rare diseases, leveraging AI technology to generate synthetic medical images that aid in research, diagnosis, and education.</p>
 							<div class="features">
-								<section>
-									<span class="icon solid major fa-database"></span>
+								<section class="reveal-on-scroll stagger-1 hover-lift">
+									<span class="icon solid major fa-database icon-animate animate-float"></span>
 									<h3>Rare Disease Database</h3>
 									<p>Curated collection of medical images for rare diseases, carefully organized and annotated for research purposes.</p>
 								</section>
-								<section>
-									<span class="icon solid major fa-brain"></span>
+								<section class="reveal-on-scroll stagger-2 hover-lift">
+									<span class="icon solid major fa-brain icon-animate animate-float"></span>
 									<h3>AI Image Generation</h3>
 									<p>Advanced AI models to generate synthetic medical images for rare diseases, helping to augment limited datasets.</p>
 								</section>
-								<section>
-									<span class="icon solid major fa-microscope"></span>
+								<section class="reveal-on-scroll stagger-3 hover-lift">
+									<span class="icon solid major fa-microscope icon-animate animate-float"></span>
 									<h3>Medical Imaging Analysis</h3>
 									<p>Tools and resources for analyzing medical images across various modalities including X-ray, CT, and MRI.</p>
 								</section>
-								<section>
-									<span class="icon solid major fa-users"></span>
+								<section class="reveal-on-scroll stagger-4 hover-lift">
+									<span class="icon solid major fa-users icon-animate animate-float"></span>
 									<h3>Research Support</h3>
 									<p>Supporting researchers and healthcare professionals with high-quality imaging data for rare disease studies.</p>
 								</section>
-								<section>
-									<span class="icon solid major fa-shield-alt"></span>
+								<section class="reveal-on-scroll stagger-5 hover-lift">
+									<span class="icon solid major fa-shield-alt icon-animate animate-float"></span>
 									<h3>Data Privacy</h3>
 									<p>All images are properly anonymized and handled according to medical data privacy standards.</p>
 								</section>
-								<section>
-									<span class="icon solid major fa-chart-line"></span>
+								<section class="reveal-on-scroll stagger-6 hover-lift">
+									<span class="icon solid major fa-chart-line icon-animate animate-float"></span>
 									<h3>Continuous Updates</h3>
 									<p>Regular updates to our database and AI models to improve accuracy and expand disease coverage.</p>
 								</section>
@@ -77,9 +89,9 @@
 					</section>
 
 				<!-- Two -->
-					<section id="two" class="wrapper style2 fade-up">
+					<section id="two" class="wrapper style2 fade-up reveal-on-scroll">
 						<div class="inner">
-							<h2>Generate Medical Images</h2>
+							<h2 class="animate-fade-in-up">Generate Medical Images</h2>
 							<p>Select a rare disease from our database and generate synthetic medical images using our AI model. These images can be used for research, training, and educational purposes.</p>
 							
 							<form id="generate-form" class="generate-form">
@@ -95,13 +107,13 @@
 									</div>
 									<div class="field">
 										<label for="num-images">Number of Images</label>
-										<input type="number" name="num-images" id="num-images" value="1" min="1" max="10" />
+										<input type="number" name="num-images" id="num-images" value="1" min="1" max="20" />
 									</div>
 								</div>
-								<div style="display: flex; justify-content: space-between; align-items: center; max-width: 900px; margin: 0 auto; padding: 0 20px;">
-									<button type="submit" class="button primary icon solid fa-magic">Generate Images</button>
-									<button type="button" id="download-all-btn" class="button primary icon solid fa-download" disabled style="opacity: 0.5; cursor: not-allowed;"> Download All as ZIP</button>
-								</div>
+							<div style="display: flex; justify-content: space-between; align-items: center; max-width: 900px; margin: 0 auto; padding: 0 20px;">
+								<button type="submit" class="button primary icon solid fa-magic button-ripple hover-lift animate-pulse-glow">Generate Images</button>
+								<button type="button" id="download-all-btn" class="button primary icon solid fa-download button-ripple hover-lift" disabled style="opacity: 0.5; cursor: not-allowed;"> Download All as ZIP</button>
+							</div>
 							</form>
 							
 							<div id="upload-preview" class="upload-preview" style="display: none;">
@@ -121,9 +133,9 @@
 					</section>
 
 				<!-- Three -->
-					<section id="three" class="wrapper style1 fade-up">
+					<section id="three" class="wrapper style1 fade-up reveal-on-scroll">
 						<div class="inner">
-							<h2>AI Chat Assistant</h2>
+							<h2 class="animate-fade-in-up">AI Chat Assistant</h2>
 							<p>Chat with our AI assistant to learn more about any medical information you seek. Ask questions and get instant responses!</p>
 							<div class="chat-container">
 							<div id="chat-messages" class="chat-messages">
@@ -139,7 +151,7 @@
 										<input type="text" id="user-input" name="user-input" placeholder="Type your message here..." autocomplete="off" />
 									</div>
 									<ul class="actions">
-										<li><button type="submit" class="button primary"><i class="fa fa-paper-plane"></i></button></li>
+										<li><button type="submit" class="button primary button-ripple hover-lift"><i class="fa fa-paper-plane"></i></button></li>
 									</ul>
 								</form>
 							</div>
@@ -166,6 +178,223 @@
 			<script src="/static/assets/js/breakpoints.min.js"></script>
 			<script src="/static/assets/js/util.js"></script>
 			<script src="/static/assets/js/main.js"></script>
+			<script>
+				// Logout functionality
+				$(document).ready(function() {
+					$('#logoutBtn').on('click', function(e) {
+						e.preventDefault();
+						if (confirm('Are you sure you want to logout?')) {
+							$.ajax({
+								url: '/api/logout',
+								method: 'POST',
+								success: function() {
+									window.location.href = '/login';
+								},
+								error: function() {
+									alert('Error logging out');
+								}
+							});
+						}
+					});
 
-	</body>
+					// Menu toggle functionality
+					const menuToggle = document.getElementById('menuToggle');
+					const sidebar = document.getElementById('sidebar');
+					const body = document.body;
+
+					menuToggle.addEventListener('click', function() {
+						sidebar.classList.toggle('active');
+						menuToggle.classList.toggle('active');
+						body.classList.toggle('sidebar-active');
+					});
+
+					// Close sidebar when clicking on a link
+					const sidebarLinks = sidebar.querySelectorAll('a');
+					sidebarLinks.forEach(link => {
+						link.addEventListener('click', function() {
+							sidebar.classList.remove('active');
+							menuToggle.classList.remove('active');
+							body.classList.remove('sidebar-active');
+						});
+					});
+
+					// Close sidebar when clicking outside
+					document.addEventListener('click', function(event) {
+						if (!sidebar.contains(event.target) && !menuToggle.contains(event.target) && sidebar.classList.contains('active')) {
+							sidebar.classList.remove('active');
+							menuToggle.classList.remove('active');
+							body.classList.remove('sidebar-active');
+						}
+					});
+
+					// Scroll reveal animations
+					function revealOnScroll() {
+						const reveals = document.querySelectorAll('.reveal-on-scroll');
+						reveals.forEach(element => {
+							const windowHeight = window.innerHeight;
+							const elementTop = element.getBoundingClientRect().top;
+							const elementVisible = 150;
+							if (elementTop < windowHeight - elementVisible) {
+								element.classList.add('revealed');
+							}
+						});
+					}
+					window.addEventListener('scroll', revealOnScroll);
+					revealOnScroll(); // Check on load
+
+					// Create floating particles
+					function createParticles() {
+						const container = document.getElementById('particles');
+						if (!container) return;
+						
+						for (let i = 0; i < 30; i++) {
+							const particle = document.createElement('div');
+							particle.className = 'particle';
+							particle.style.left = Math.random() * 100 + '%';
+							particle.style.animationDelay = Math.random() * 20 + 's';
+							particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+							container.appendChild(particle);
+						}
+					}
+					createParticles();
+
+				// Add hover wobble to images when generated
+				$(document).on('mouseenter', '.generated-image-item img', function() {
+					$(this).addClass('hover-wobble');
+					setTimeout(() => {
+						$(this).removeClass('hover-wobble');
+					}, 800);
+				});
+
+				// Generate form submission
+				$('#generate-form').on('submit', function(e) {
+					e.preventDefault();
+					
+					const disease = $('#disease-select').val();
+					const numImages = $('#num-images').val();
+					
+					if (!disease) {
+						alert('Please select a disease');
+						return;
+					}
+					
+					// Show loading indicator
+					$('#generation-loading').show();
+					$('#generation-result').hide();
+					$('#generated-images').empty();
+					$('#download-all-btn').prop('disabled', true).css({opacity: 0.5, cursor: 'not-allowed'});
+					
+					// Send request to server
+					$.ajax({
+						url: '/generate',
+						method: 'POST',
+						contentType: 'application/json',
+						data: JSON.stringify({
+							disease: disease,
+							num_images: parseInt(numImages)
+						}),
+						success: function(response) {
+							$('#generation-loading').hide();
+							
+							if (response.images && response.images.length > 0) {
+								// Display generated images
+								$('#generation-result').show();
+								const container = $('#generated-images');
+								
+					response.images.forEach(function(imagePath) {
+						const imgDiv = $('<div>').addClass('generated-image-item');
+						const img = $('<img>').attr('src', imagePath).attr('alt', 'Generated medical image');
+						
+						imgDiv.append(img);
+						container.append(imgDiv);
+					});								// Enable download all button
+								if (response.session_id) {
+									$('#download-all-btn')
+										.prop('disabled', false)
+										.css({opacity: 1, cursor: 'pointer'})
+										.data('session-id', response.session_id);
+								}
+							} else {
+								alert('No images were generated. Please try again.');
+							}
+						},
+						error: function(xhr) {
+							$('#generation-loading').hide();
+							const errorMsg = xhr.responseJSON && xhr.responseJSON.error 
+								? xhr.responseJSON.error 
+								: 'An error occurred while generating images. Please try again.';
+							alert(errorMsg);
+						}
+					});
+				});
+
+				// Download all images as ZIP
+				$('#download-all-btn').on('click', function() {
+					const sessionId = $(this).data('session-id');
+					if (sessionId) {
+						window.location.href = '/download-all/' + sessionId;
+					}
+				});
+
+				// Chat form submission
+				$('#chat-form').on('submit', function(e) {
+					e.preventDefault();
+					
+					const userInput = $('#user-input').val().trim();
+					if (!userInput) return;
+					
+					// Add user message to chat
+					const userMessage = $('<div>').addClass('message user-message');
+					const userContent = $('<div>').addClass('message-content').text(userInput);
+					userMessage.append(userContent);
+					$('#chat-messages').append(userMessage);
+					
+					// Clear input
+					$('#user-input').val('');
+					
+					// Add typing indicator
+					const typingMessage = $('<div>').addClass('message ai-message typing-indicator');
+					const typingContent = $('<div>').addClass('message-content')
+						.html('<strong>AI Assistant:</strong> <span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>');
+					typingMessage.append(typingContent);
+					$('#chat-messages').append(typingMessage);
+					
+					// Scroll to bottom
+					$('#chat-messages').scrollTop($('#chat-messages')[0].scrollHeight);
+					
+					// Send to server
+					$.ajax({
+						url: '/chat',
+						method: 'POST',
+						contentType: 'application/json',
+						data: JSON.stringify({ message: userInput }),
+						success: function(response) {
+							// Remove typing indicator
+							typingMessage.remove();
+							
+							// Add AI response
+							const aiMessage = $('<div>').addClass('message ai-message');
+							const aiContent = $('<div>').addClass('message-content')
+								.html('<strong>AI Assistant:</strong> ' + response.response);
+							aiMessage.append(aiContent);
+							$('#chat-messages').append(aiMessage);
+							
+							// Scroll to bottom
+							$('#chat-messages').scrollTop($('#chat-messages')[0].scrollHeight);
+						},
+						error: function() {
+							typingMessage.remove();
+							
+							const errorMessage = $('<div>').addClass('message ai-message');
+							const errorContent = $('<div>').addClass('message-content')
+								.html('<strong>AI Assistant:</strong> Sorry, I encountered an error. Please try again.');
+							errorMessage.append(errorContent);
+							$('#chat-messages').append(errorMessage);
+							
+							$('#chat-messages').scrollTop($('#chat-messages')[0].scrollHeight);
+						}
+					});
+				});
+			});
+		</script>	</body>
 </html>
