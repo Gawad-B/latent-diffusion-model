@@ -368,18 +368,28 @@
 						method: 'POST',
 						contentType: 'application/json',
 						data: JSON.stringify({ message: userInput }),
-						success: function(response) {
-							// Remove typing indicator
-							typingMessage.remove();
-							
-							// Add AI response
-							const aiMessage = $('<div>').addClass('message ai-message');
-							const aiContent = $('<div>').addClass('message-content')
-								.html('<strong>AI Assistant:</strong> ' + response.response);
-							aiMessage.append(aiContent);
-							$('#chat-messages').append(aiMessage);
-							
-							// Scroll to bottom
+					success: function(response) {
+						// Remove typing indicator
+						typingMessage.remove();
+						
+						// Format the AI response
+						let formattedResponse = response.response;
+						
+						// Convert paragraphs (double newlines) to <br><br>
+						formattedResponse = formattedResponse.replace(/\n\n/g, '<br><br>');
+						
+						// Convert single newlines to <br>
+						formattedResponse = formattedResponse.replace(/\n/g, '<br>');
+						
+						// Convert bullet points (* item) to proper HTML list items
+						formattedResponse = formattedResponse.replace(/\* ([^\n<]+)/g, '<br>• $1');
+						
+						// Add AI response
+						const aiMessage = $('<div>').addClass('message ai-message');
+						const aiContent = $('<div>').addClass('message-content')
+							.html('<strong>AI Assistant:</strong><br>' + formattedResponse);
+						aiMessage.append(aiContent);
+						$('#chat-messages').append(aiMessage);							// Scroll to bottom
 							$('#chat-messages').scrollTop($('#chat-messages')[0].scrollHeight);
 						},
 						error: function() {
