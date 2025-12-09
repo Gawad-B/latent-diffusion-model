@@ -21,9 +21,10 @@ Your medical image generation system is fully integrated and ready to use with a
   - Normal (healthy) chest X-rays
   - Pneumonia cases
   - Tuberculosis cases
-- **Batch generation**: Create 1-10 images at once
-- **Preview before download**: Review quality before saving
-- **Flexible downloads**: Individual images or bulk ZIP download
+- **Batch generation**: Create 1-20 images at once
+- **Smart display**: Shows up to 6 sample previews
+- **Download all**: Get all generated images as ZIP file
+- **Responsive interface**: Modern purple gradient theme with hamburger menu
 
 ### 💬 AI Chat Assistant
 - Interactive medical information assistant powered by **Google Gemini 2.5 Flash**
@@ -36,9 +37,13 @@ Your medical image generation system is fully integrated and ready to use with a
 - Support for various imaging modalities (X-ray, CT, MRI)
 - Organized and annotated for research purposes
 
-### 🔒 Data Privacy
-- All images are properly anonymized
-- Compliance with medical data privacy standards
+### 🎨 Modern UI Design
+- **Glassmorphism effects** with backdrop blur
+- **Purple gradient theme** (#8B3FBF to #A855D8)
+- **Hamburger menu** on the right for easy navigation
+- **Smooth animations** with scroll reveals and particle effects
+- **Responsive layout** that works on all devices
+- **Liquid glass buttons** with hover effects
 
 ## 🏗️ Tech Stack
 
@@ -48,8 +53,9 @@ Your medical image generation system is fully integrated and ready to use with a
 - **ML Framework**: PyTorch + Diffusers (Hugging Face)
 - **Model**: Latent Diffusion Model (U-Net + VAE)
 - **Frontend**: HTML5, CSS3, JavaScript (jQuery)
+- **UI/UX**: Glassmorphism design, purple gradient theme, responsive hamburger menu
 - **AI Chat**: Google Gemini API (gemini-2.5-flash)
-- **Design**: Responsive CSS with glassmorphism effects & Font Awesome icons
+- **Design**: Responsive CSS with animations & Font Awesome icons
 - **Security**: Environment variables with python-dotenv, Git LFS for large files
 
 ## 🚀 Quick Start
@@ -123,24 +129,25 @@ latent-diffusion-model/
 │   ├── generated/                     # Generated images (auto-created)
 │   ├── images/                        # Static images (logo, favicon)
 │   ├── assets/
-│   │   ├── css/main.css              # Stylesheets
+│   │   ├── css/
+│   │   │   ├── main.css              # Main stylesheet with purple theme
+│   │   │   └── animations.css        # Animation effects
 │   │   ├── js/main.js                # Custom JavaScript
 │   │   └── webfonts/                 # Font files
 └── templates/
-    ├── index.html                     # Main application page (protected)
+    ├── index.html                     # Main application page (protected, with hamburger menu)
     ├── login.html                     # Login page with liquid glass button
     └── signup.html                    # Signup page with liquid glass button
-│   │   └── webfonts/                 # Font files
-└── templates/
-    └── index.html                     # Main HTML template
 ```
-└── INTEGRATION_COMPLETE.md            # Integration summary
-```
+
+### 🔒 Data Privacy
+- All images are properly anonymized
+- Compliance with medical data privacy standards
 
 ## 🎯 How to Use
 
 ### First Time Setup
-1. **Sign Up**: Navigate to `/signup` and create an account
+1. **Sign Up**: Navigate to `/signup` and create an account with the liquid glass form
 2. **Login**: Use your credentials at `/login`
 3. **Access Protected Features**: All image generation and chat features require login
 
@@ -151,13 +158,11 @@ latent-diffusion-model/
    - Normal (healthy chest X-ray)
    - Pneumonia
    - Tuberculosis
-3. **Choose quantity:** 1-10 images
-4. **Click "Generate Images"**
+3. **Choose quantity:** 1-20 images (max 6 will be displayed as previews)
+4. **Click "Generate Images"** button
 5. **Wait** ~30-60 seconds (GPU) or 3-5 minutes (CPU)
-6. **Preview** all generated images in a grid
-7. **Download:**
-   - Individual images: Click download button on each
-   - Bulk download: Click "Download All as ZIP"
+6. **Preview** up to 6 sample images in a centered grid
+7. **Download:** Click "Download All as ZIP" to get all generated images
 
 ### Using the AI Chat Assistant
 
@@ -204,12 +209,17 @@ AI chat interactions.
 - **Response**: `{"response": "AI answer"}`
 
 ### `POST /generate`
-Generates medical images.
-- **Request**: `{"disease": "pneumonia", "count": 5}`
-- **Response**: `{"success": true, "images": [...], "session_id": "..."}`
+Generates medical images (requires login).
+- **Request**: `{"disease": "pneumonia", "num_images": 5}`
+- **Response**: `{"success": true, "images": [...], "session_id": "...", "count": 5}`
+- **Note**: Accepts 1-20 images, displays maximum 6 samples
+
+### `GET /download-all/<session_id>`
+Downloads all generated images as ZIP file (requires login).
+- **Response**: ZIP file download containing all generated images
 
 ### `POST /download-batch`
-Downloads all generated images as ZIP.
+Legacy endpoint for ZIP downloads.
 - **Request**: `{"session_id": "pneumonia_1234567890"}`
 - **Response**: ZIP file download
 
