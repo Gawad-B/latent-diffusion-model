@@ -7,6 +7,10 @@ import base64
 from io import BytesIO
 import zipfile
 import time
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 app = Flask(__name__)
 
@@ -14,7 +18,7 @@ app = Flask(__name__)
 model_generator = None
 
 # Google Gemini API configuration
-GOOGLE_API_KEY = "AIzaSyA9NqF58IsYrU3Djj-xsj4yoenBRIW0ZgM"
+GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 GEMINI_API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GOOGLE_API_KEY}"
 
 USE_GEMINI = True
