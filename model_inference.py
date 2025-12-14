@@ -71,7 +71,7 @@ class MedicalImageGenerator:
         # Load trained weights if provided
         if model_path:
             self.load_checkpoint(model_path)
-        
+
         # Initialize noise scheduler
         self.noise_scheduler = DDPMScheduler(
             num_train_timesteps=self.config.TIMESTEPS
